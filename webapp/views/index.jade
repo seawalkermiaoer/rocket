@@ -1,0 +1,9 @@
+extends ./layout.jade
+block title
+  title #{title}
+block content
+  h1 Available Products
+  each it, id in products
+   a(href="/detail/#{it.id}")
+    p.
+     #{it.title}
