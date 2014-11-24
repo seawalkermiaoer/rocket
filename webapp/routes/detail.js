@@ -26,7 +26,6 @@ function connectKafka(){
 
 
 function send(msg) {
-    console.log(msg)
     var payloads = [
         { topic: 'test', messages: msg, partition: 0 }
     ];
@@ -62,7 +61,7 @@ router.get('/:id', function(req, res) {
 		var current = new Date();
    		var entry = JSON.stringify({user: uid, action: "view",product: id, type: product.category, time:current.toGMTString()});
     	
-    	console.log(entry);
+    	//console.log(entry);
     	send(entry)
 		res.render('detail.jade', product);
 	});

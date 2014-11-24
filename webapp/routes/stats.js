@@ -1,18 +1,28 @@
 var express = require('express');
 var router = express.Router();
 
+var kafka = require('kafka-node'),
+    Consumer = kafka.Consumer,
+    client = new kafka.Client();
+
+
+
+
+
 /* GET users listing. */
 
 router.get('/', function(req, res) {
-  res.send('respond with a stats from redis');
 
-  client.get("foo", function(err, reply){
-      console.log(reply.toString());
+  var consumer = new Consumer(client,
+      [{ topic: 'test', partition: 0 }],
+      {autoCommit: false}
+  );
+
+  consumer.on('message', function (message) {
+      console.log(message);
   });
+
+  res.render('stats.jade');
 });
 
-
-// redis client
-var redis   = require('redis');
-var client  = redis.createClient('6379', '127.0.0.1');
 module.exports = router;

@@ -59,10 +59,8 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-
-
-
 //DEBUG=webapp node ./bin/www for debug!
+//supervisor
 
 app.listen(3000, function(){
   console.log("Express server listening on port 3000");
