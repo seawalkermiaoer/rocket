@@ -59,10 +59,11 @@ router.get('/:id', function(req, res) {
 		}
 		var product = JSON.parse(reply);
 		var current = new Date();
-   		var entry = JSON.stringify({user: uid, action: "view",product: id, type: product.category, time:current.toGMTString()});
+   		var entry = JSON.stringify({user: uid, action: "view", productId: id, productType: product.category});
     	
-    	//console.log(entry);
+    	console.log(entry);
     	send(entry)
+
 		res.render('detail.jade', product);
 	});
 
