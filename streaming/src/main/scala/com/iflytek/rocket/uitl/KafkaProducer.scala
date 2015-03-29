@@ -5,7 +5,7 @@
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
  * the License.  You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
@@ -15,19 +15,12 @@
  * limitations under the License.
  */
 
-package com.iflytek.producer
+package com.iflytek.rocket.uitl
 
-import scala.collection.JavaConversions._
-import joptsimple._
 import java.util.{Properties, UUID}
-import java.io._
-import kafka.common._
+
 import kafka.message._
-import kafka.serializer._
-import java.util.Properties
-import kafka.producer.Producer
-import kafka.producer.ProducerConfig
-import kafka.producer.KeyedMessage
+import kafka.producer.{KeyedMessage, Producer, ProducerConfig}
 
 case class KafkaProducer(
   topic: String, 
@@ -54,19 +47,17 @@ case class KafkaProducer(
 
   val producer = new Producer[AnyRef, AnyRef](new ProducerConfig(props))
   
-  def kafkaMesssage(message: Array[Byte], partition: Array[Byte]): KeyedMessage[AnyRef, AnyRef] = {
-     if (partition == null) {
-       new KeyedMessage(topic,message)
-     } else {
-       new KeyedMessage(topic,partition,message)
-     }
+  def kafkaMesssage(message: String): KeyedMessage[AnyRef, AnyRef] = {
+     new KeyedMessage(topic, message.getBytes())
   }
   
-  def send(message: String, partition: String = null): Unit = send(message.getBytes("UTF8"), if (partition == null) null else partition.getBytes("UTF8"))
+//  def send(message: String, partition: String = null): Unit =
+//    send(message.getBytes("ISO-8859-1"), if (partition == null) null else partition.getBytes("ISO-8859-1"))
 
-  def send(message: Array[Byte], partition: Array[Byte]): Unit = {
+  def send(message: String): Unit = {
     try {
-      producer.send(kafkaMesssage(message, partition))
+
+      producer.send(kafkaMesssage(message))
     } catch {
       case e: Exception =>
         e.printStackTrace

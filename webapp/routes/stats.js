@@ -1,25 +1,31 @@
 var express = require('express');
 var router = express.Router();
-
+//kafka
 var kafka = require('kafka-node');
 var Consumer = kafka.Consumer;
 var Offset = kafka.Offset;
 var Client = kafka.Client;
 var client = new Client('localhost:2181');
-var topics = [{topic: 'test', partition: 0}],
-        options = { autoCommit: false,
+var topics = [{topic: 'stats', partition: 0}],
+    options = { 
+            autoCommit: false,
             fromBeginning: false,
+            fromOffest:false,
             fetchMaxWaitMs: 1000,
             fetchMaxBytes: 1024*1024
-        }
-    ;
+    };
 
 function createConsumer(topics) {
     var consumer = new Consumer(client, topics, options);
     var offset = new Offset(client);
+
     consumer.on('message', function (message) {
-        console.log(this.id, message);
+        if (message.offset > 1199) {
+            console.log(message.key.toString('ascii'))
+            console.log(message.value)
+        }
     });
+
     consumer.on('error', function (err) {
         console.log('error', err);
     });
@@ -32,11 +38,14 @@ function createConsumer(topics) {
     })
 }
 
+
+createConsumer(topics);
+
 /* GET users listing. */
 
 router.get('/', function(req, res) {
-  createConsumer(topics);
-  res.render('stats.jade');
+  //res.render('stats.jade');
+  res.sendFile(__dirname + '/../views/index.html');
 });
 
 module.exports = router;
